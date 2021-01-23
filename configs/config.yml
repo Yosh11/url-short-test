@@ -1,0 +1,9 @@
+srv:
+    port: ":8080"
+
+db:
+    namedb: "url-short"
+    scheme: "sqlserver"
+    user: "sa"
+    host: "localhost"
+    port: 1433
