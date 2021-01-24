@@ -22,9 +22,10 @@ type Config struct {
 // Urls struct for db
 type Urls struct {
 	gorm.Model
-	Hash  string `json:"hash"`
-	URL   string `json:"url" validate:"required,url"`
-	Count int    `json:"count"`
+	Hash   string `json:"hash"`
+	URL    string `json:"url" validate:"required,url"`
+	Count  int    `json:"count"`
+	Access bool   `json:"access"`
 }
 
 // NewMSSQLDB conn with db

@@ -71,9 +71,10 @@ func AddURL(ctx echo.Context) error {
 	randHash := genhash.Generate()
 
 	rURL := &database.Urls{
-		Hash:  randHash,
-		URL:   req.URL,
-		Count: 0,
+		Hash:   randHash,
+		URL:    req.URL,
+		Count:  0,
+		Access: true,
 	}
 
 	db.Create(&rURL)
@@ -96,4 +97,16 @@ func RedirectURL(ctx echo.Context) error {
 	db.Model(&pattern).Update("count", pattern.Count+1)
 
 	return ctx.Redirect(308, pattern.URL)
+}
+
+// GetInfo get information about short url
+func GetInfo(ctx echo.Context) error {
+	var pattern database.Urls
+
+	db := initDB()
+
+	hs := ctx.Param("hash")
+	db.Where("hash = ?", hs).Find(&pattern)
+
+	return ctx.JSON(200, pattern)
 }
