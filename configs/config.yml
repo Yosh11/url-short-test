@@ -1,4 +1,5 @@
 srv:
+    host: "localhost"
     port: ":8080"
 
 db:

@@ -37,6 +37,7 @@ func startServer(addr string) {
 
 	// Routes
 	e.POST("/set", handlers.AddURL)
+	e.GET("/:hash", handlers.RedirectURL)
 
 	s := &http.Server{
 		Addr:           addr,
