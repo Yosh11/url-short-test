@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/Yosh11/url-short-test/database"
+	"github.com/Yosh11/url-short-test/lib/validator"
 	"github.com/Yosh11/url-short-test/pkg/handlers"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -33,12 +37,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to initialize db: %s\n", err.Error())
 	}
+
 	if err = db.AutoMigrate(&database.Urls{}); err != nil {
 		log.Fatalf("failed to mirgate: %s\n", err.Error())
 	}
-	if err := run(); err != nil {
-		log.Fatalf("failed to start server: %s\n", err.Error())
-	}
+
+	// Run and init server
+	startServer()
 }
 
 func initConfig() error {
@@ -47,9 +52,10 @@ func initConfig() error {
 	return viper.ReadInConfig()
 }
 
-func run() error {
+func startServer() {
 	// Initialize Echo instance
 	e := echo.New()
+	e.Validator = validator.NewValidator()
 
 	// Middleware
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
@@ -58,15 +64,35 @@ func run() error {
 	e.Use(middleware.Recover())
 
 	// Routes
-	e.GET("/set", handlers.AddURL)
+	e.POST("/set", handlers.AddURL)
 
 	s := &http.Server{
 		Addr:           viper.GetString("srv.port"),
+		Handler:        e,
 		MaxHeaderBytes: 1 << 20, // 1 Mb
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
 	}
-	e.Logger.Fatal(e.StartServer(s))
 
-	return nil
+	go func(s *http.Server) {
+		if err := e.StartServer(s); err != nil {
+			e.Logger.Info("shutting down the server")
+		}
+	}(s)
+
+	graceful(s, 5*time.Second)
+}
+
+// Graceful Shutdown implementation taken from echo doc
+func graceful(s *http.Server, timeout time.Duration) {
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	if err := s.Shutdown(ctx); err != nil {
+		log.Fatalf("error at graceful shutdown: %s", err.Error())
+	} else {
+		log.Println("Server stopped")
+	}
 }

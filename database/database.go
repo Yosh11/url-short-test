@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 
+	_ "github.com/go-playground/validator/v10" // ...
 	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
 )
@@ -22,7 +23,7 @@ type Config struct {
 type Urls struct {
 	gorm.Model
 	ID    string `json:"id"`
-	URL   string `json:"url"`
+	URL   string `json:"url" validate:"required,url"`
 	Count int    `json:"count"`
 }
 
@@ -36,7 +37,6 @@ func NewMSSQLDB(cfg Config) (*gorm.DB, error) {
 		Host:     fmt.Sprintf("%s:%d", "localhost", 1433),
 		RawQuery: query.Encode(),
 	}
-
 	db, err := gorm.Open(sqlserver.Open(u.String()), &gorm.Config{})
 	if err != nil {
 		return nil, err
