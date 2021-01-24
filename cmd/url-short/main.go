@@ -9,50 +9,19 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Yosh11/url-short-test/database"
 	"github.com/Yosh11/url-short-test/lib/validator"
 	"github.com/Yosh11/url-short-test/pkg/handlers"
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/spf13/viper"
+	echoLog "github.com/labstack/gommon/log"
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatalf("error loading env variables: %s\n", err.Error())
-	}
-	if err := initConfig(); err != nil {
-		log.Fatalf("error initializing configs: %s\n", err.Error())
-	}
-
-	db, err := database.NewMSSQLDB(database.Config{
-		NameDB:   viper.GetString("db.namedb"),
-		Scheme:   viper.GetString("db.scheme"),
-		User:     viper.GetString("db.user"),
-		Password: os.Getenv("PASS_DB"), // private in .env
-		Host:     viper.GetString("db.host"),
-		Port:     viper.GetUint32("db.port"),
-	})
-	if err != nil {
-		log.Fatalf("failed to initialize db: %s\n", err.Error())
-	}
-
-	if err = db.AutoMigrate(&database.Urls{}); err != nil {
-		log.Fatalf("failed to mirgate: %s\n", err.Error())
-	}
-
 	// Run and init server
-	startServer()
+	startServer(":8080")
 }
 
-func initConfig() error {
-	viper.AddConfigPath("configs")
-	viper.SetConfigName("config")
-	return viper.ReadInConfig()
-}
-
-func startServer() {
+func startServer(addr string) {
 	// Initialize Echo instance
 	e := echo.New()
 	e.Validator = validator.NewValidator()
@@ -61,14 +30,16 @@ func startServer() {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "[INFO] method=${method}, uri=${uri}, status=${status}\n",
 	}))
-	e.Use(middleware.Recover())
+	e.Use(middleware.RecoverWithConfig(middleware.RecoverConfig{
+		StackSize: 1 << 10, // 1 KB
+		LogLevel:  echoLog.ERROR,
+	}))
 
 	// Routes
 	e.POST("/set", handlers.AddURL)
 
 	s := &http.Server{
-		Addr:           viper.GetString("srv.port"),
-		Handler:        e,
+		Addr:           addr,
 		MaxHeaderBytes: 1 << 20, // 1 Mb
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
@@ -93,6 +64,6 @@ func graceful(s *http.Server, timeout time.Duration) {
 	if err := s.Shutdown(ctx); err != nil {
 		log.Fatalf("error at graceful shutdown: %s", err.Error())
 	} else {
-		log.Println("Server stopped")
+		log.Println("Server is graceful stopped")
 	}
 }

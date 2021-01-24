@@ -22,7 +22,7 @@ type Config struct {
 // Urls struct for db
 type Urls struct {
 	gorm.Model
-	ID    string `json:"id"`
+	Hash  string `json:"hash"`
 	URL   string `json:"url" validate:"required,url"`
 	Count int    `json:"count"`
 }
@@ -41,5 +41,10 @@ func NewMSSQLDB(cfg Config) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if err = db.AutoMigrate(&Urls{}); err != nil {
+		return nil, err
+	}
+
 	return db, nil
 }
