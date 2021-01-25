@@ -3,12 +3,10 @@ package handlers
 import (
 	"log"
 	"net/http"
-	"os"
 	"sync"
 
 	"github.com/Yosh11/url-short-test/database"
 	"github.com/Yosh11/url-short-test/lib/genhash"
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
@@ -30,25 +28,23 @@ func initConfig() error {
 	return viper.ReadInConfig()
 }
 
-func initDB() *gorm.DB {
+// InitDB init db
+func InitDB() *gorm.DB {
 	once.Do(func() {
-		if err := godotenv.Load(); err != nil {
-			log.Fatalf("error loading env variables: %s\n", err.Error())
-		}
 		if err := initConfig(); err != nil {
-			log.Fatalf("error initializing configs: %s\n", err.Error())
+			log.Panicf("error initializing configs: %s\n", err.Error())
 		}
 		var err error
 		db, err = database.NewMSSQLDB(database.Config{
 			NameDB:   viper.GetString("db.namedb"),
 			Scheme:   viper.GetString("db.scheme"),
 			User:     viper.GetString("db.user"),
-			Password: os.Getenv("PASS_DB"), // private in .env
+			Password: viper.GetString("db.pass"),
 			Host:     viper.GetString("db.host"),
-			Port:     viper.GetUint32("db.port"),
+			Port:     viper.GetString("db.port"),
 		})
 		if err != nil {
-			log.Fatalf("failed to initialize db: %s\n", err.Error())
+			log.Panicf("failed to initialize db: %s\n", err.Error())
 		}
 	})
 	return db
@@ -57,7 +53,7 @@ func initDB() *gorm.DB {
 // AddURL set short url
 func AddURL(ctx echo.Context) error {
 	var req database.Urls
-	db := initDB()
+	db := InitDB()
 
 	err := ctx.Bind(&req)
 	if err != nil {
@@ -75,6 +71,7 @@ func AddURL(ctx echo.Context) error {
 		URL:    req.URL,
 		Count:  0,
 		Access: true,
+		Code:   200,
 	}
 
 	db.Create(&rURL)
@@ -89,7 +86,7 @@ func AddURL(ctx echo.Context) error {
 func RedirectURL(ctx echo.Context) error {
 	var pattern database.Urls
 
-	db := initDB()
+	db := InitDB()
 
 	hs := ctx.Param("hash")
 	db.Where("hash = ?", hs).Find(&pattern)
@@ -103,7 +100,7 @@ func RedirectURL(ctx echo.Context) error {
 func GetInfo(ctx echo.Context) error {
 	var pattern database.Urls
 
-	db := initDB()
+	db := InitDB()
 
 	hs := ctx.Param("hash")
 	db.Where("hash = ?", hs).Find(&pattern)

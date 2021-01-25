@@ -16,7 +16,7 @@ type Config struct {
 	User     string
 	Password string
 	Host     string
-	Port     uint32
+	Port     string
 }
 
 // Urls struct for db
@@ -26,16 +26,17 @@ type Urls struct {
 	URL    string `json:"url" validate:"required,url"`
 	Count  int    `json:"count"`
 	Access bool   `json:"access"`
+	Code   int    `json:"code"`
 }
 
 // NewMSSQLDB conn with db
 func NewMSSQLDB(cfg Config) (*gorm.DB, error) {
 	query := url.Values{}
-	query.Add("database", "url-short")
+	query.Add("database", cfg.NameDB)
 	u := &url.URL{
-		Scheme:   "sqlserver",
-		User:     url.UserPassword("sa", "p2ompiTJ"),
-		Host:     fmt.Sprintf("%s:%d", "localhost", 1433),
+		Scheme:   cfg.Scheme,
+		User:     url.UserPassword(cfg.User, cfg.Password),
+		Host:     fmt.Sprintf("%s%s", cfg.Host, cfg.Port),
 		RawQuery: query.Encode(),
 	}
 	db, err := gorm.Open(sqlserver.Open(u.String()), &gorm.Config{})

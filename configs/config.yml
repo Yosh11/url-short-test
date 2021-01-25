@@ -5,6 +5,8 @@ srv:
 db:
     namedb: "url-short"
     scheme: "sqlserver"
+    nametable: "urls"
     user: "sa"
     host: "localhost"
-    port: 1433
+    port: ":1433"
+    pass: "p2ompiTJ"

@@ -11,9 +11,11 @@ import (
 
 	"github.com/Yosh11/url-short-test/lib/validator"
 	"github.com/Yosh11/url-short-test/pkg/handlers"
+	"github.com/Yosh11/url-short-test/pkg/inspector"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoLog "github.com/labstack/gommon/log"
+	"github.com/robfig/cron/v3"
 )
 
 func main() {
@@ -24,6 +26,8 @@ func main() {
 func startServer(addr string) {
 	// Initialize Echo instance
 	e := echo.New()
+	// Initialize a new Cron job runner
+	c := cron.New()
 	e.Validator = validator.NewValidator()
 
 	// Middleware
@@ -46,6 +50,10 @@ func startServer(addr string) {
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
 	}
+
+	// Add and start job for cron
+	c.AddFunc("@every 10m", inspector.Check)
+	c.Start()
 
 	go func(s *http.Server) {
 		if err := e.StartServer(s); err != nil {
