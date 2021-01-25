@@ -62,7 +62,7 @@ http://localhost:8080/nYpDEvR ---> https://google.com
 ### MS SQL Server
 
 ```sh
-$ cd ./url-short-test
+$ cd ./
 $ docker-compose up
 
 ```
@@ -70,6 +70,7 @@ $ docker-compose up
 ### API Server
 
 ```sh
-$ cd ./url-short-test/cmd/url-short
+$ cd ./
+$ make
 $ ./main.exe
 ```
