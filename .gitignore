@@ -16,6 +16,10 @@
 
 # IDE
 .vscode
+.idea
 
 # environment variable
 # .env
+
+#docker volume
+#database/volume-db
