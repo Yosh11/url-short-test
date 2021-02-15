@@ -1,12 +1,12 @@
 srv:
-    host: "localhost"
-    port: ":8080"
+  host: "localhost"
+  port: ":8080"
 
 db:
-    namedb: "url-short"
-    scheme: "sqlserver"
-    nametable: "urls"
-    user: "sa"
-    host: "localhost"
-    port: ":1433"
-    pass: "p2ompiTJ"
+  namedb: "url-short"
+  scheme: "sqlserver"
+  nametable: "urls"
+  user: "sa"
+  host: "localhost"
+  port: ":1433"
+  pass: "p2ompiTJ"

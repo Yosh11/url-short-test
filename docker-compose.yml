@@ -1,29 +1,24 @@
 version: "3.9"
 
-# networks:
-#   rest-api:
-
 services:
-    db:
-        restart: always
-        image: mcr.microsoft.com/mssql/server:latest
-        container_name: MSSQL
-        environment:
-            - ACCEPT_EULA=Y
-            - SA_PASSWORD=p2ompiTJ
-        ports:
-            - "1433:1433"
-        volumes:
-            - ./database/volume-db:/var/opt/mssql/data
-        # networks:
-        #     - rest-api
-
-    # api:
-    #     build: ./
-    #     container_name: API
-    #     depends_on:
-    #         - db
-    #     ports:
-    #       - "8080:8080"
-    #     networks:
-    #         - rest-api
+  db:
+    restart: always
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: MSSQL
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=p2ompiTJ
+    ports:
+      - 1433:1433
+    volumes:
+      - ./database/volume-db:/var/opt/mssql/data
+    # logging:
+    #   driver: none
+  # api:
+  #   build: ./
+  #   container_name: API
+  #   command: ["./cmd/url-short/wait-for-it.sh", "db:1433", "--timeout=60", "--", "./apiserver"]
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - 8080:8080

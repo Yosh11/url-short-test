@@ -1,7 +1,7 @@
 package inspector
 
 import (
-	"log"
+    "log"
 	"net/http"
 	"sync"
 	"time"
@@ -28,12 +28,12 @@ func Check() {
 
 	for i = 0; i < count; i++ {
 		wg.Add(1)
-		go runChech(urls[i], &wg)
+		go runCheck(urls[i], &wg)
 	}
 	wg.Wait()
 }
 
-func runChech(url string, wg *sync.WaitGroup) {
+func runCheck(url string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	var pattern database.Urls
 	db.Where("url = ?", url).Find(&pattern)

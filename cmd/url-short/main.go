@@ -1,21 +1,22 @@
 package main
 
 import (
-	"context"
-	"log"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
+    "context"
+    "log"
+    "net/http"
+    "os"
+    "os/signal"
+    "syscall"
+    "time"
 
-	"github.com/Yosh11/url-short-test/lib/validator"
-	"github.com/Yosh11/url-short-test/pkg/handlers"
-	"github.com/Yosh11/url-short-test/pkg/inspector"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	echoLog "github.com/labstack/gommon/log"
-	"github.com/robfig/cron/v3"
+    "github.com/labstack/echo/v4"
+    "github.com/labstack/echo/v4/middleware"
+    echoLog "github.com/labstack/gommon/log"
+    "github.com/robfig/cron/v3"
+
+    "github.com/Yosh11/url-short-test/lib/inspector"
+    "github.com/Yosh11/url-short-test/lib/validator"
+    "github.com/Yosh11/url-short-test/pkg/handlers"
 )
 
 func main() {
@@ -52,7 +53,7 @@ func startServer(addr string) {
 	}
 
 	// Add and start job for cron
-	c.AddFunc("@every 10m", inspector.Check)
+	c.AddFunc("@every 1m", inspector.Check)
 	c.Start()
 
 	go func(s *http.Server) {
