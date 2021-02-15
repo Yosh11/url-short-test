@@ -1,5 +1,6 @@
-.PHONY: build
 build:
 	go build -v ./cmd/url-short/main.go
 
-.DEFAULT_GOAL := build
+run: build
+	./main.exe
+.DEFAULT_GOAL := run
