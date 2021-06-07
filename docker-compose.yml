@@ -3,22 +3,33 @@ version: "3.9"
 services:
   db:
     restart: always
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    container_name: MSSQL
+    build:
+      ./database
+    image: db
+    container_name: PSQL
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=p2ompiTJ
+      - POSTGRES_DB=url-short
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=p2ompiTJ
     ports:
-      - 1433:1433
+      - "5432:5432"
     volumes:
-      - ./database/volume-db:/var/opt/mssql/data
-    # logging:
-    #   driver: none
-  # api:
-  #   build: ./
-  #   container_name: API
-  #   command: ["./cmd/url-short/wait-for-it.sh", "db:1433", "--timeout=60", "--", "./apiserver"]
-  #   depends_on:
-  #     - db
-  #   ports:
-  #     - 8080:8080
+      - ./database/volume-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    logging:
+      driver: none
+  api:
+    build: ./
+    container_name: API
+    command: ["./apiserver"]
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+    ports:
+      - "8080:8080"
