@@ -1,18 +1,16 @@
 package database
 
 import (
-	"fmt"
-	"net/url"
+    "fmt"
 
-	_ "github.com/go-playground/validator/v10" // ...
-	"gorm.io/driver/sqlserver"
-	"gorm.io/gorm"
+    _ "github.com/go-playground/validator/v10" // ...
+    "gorm.io/driver/postgres"
+    "gorm.io/gorm"
 )
 
 // Config for db
 type Config struct {
 	NameDB   string
-	Scheme   string
 	User     string
 	Password string
 	Host     string
@@ -29,17 +27,11 @@ type Urls struct {
 	Code   int    `json:"code"`
 }
 
-// NewMSSQLDB conn with db
-func NewMSSQLDB(cfg Config) (*gorm.DB, error) {
-	query := url.Values{}
-	query.Add("database", cfg.NameDB)
-	u := &url.URL{
-		Scheme:   cfg.Scheme,
-		User:     url.UserPassword(cfg.User, cfg.Password),
-		Host:     fmt.Sprintf("%s%s", cfg.Host, cfg.Port),
-		RawQuery: query.Encode(),
-	}
-	db, err := gorm.Open(sqlserver.Open(u.String()), &gorm.Config{})
+// NewDB conn with db
+func NewDB(cfg Config) (*gorm.DB, error) {
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Europe/Moscow",
+	    cfg.Host, cfg.User, cfg.Password, cfg.NameDB, cfg.Port)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}

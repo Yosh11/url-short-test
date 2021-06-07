@@ -35,9 +35,8 @@ func InitDB() *gorm.DB {
 			log.Panicf("error initializing configs: %s\n", err.Error())
 		}
 		var err error
-		db, err = database.NewMSSQLDB(database.Config{
+		db, err = database.NewDB(database.Config{
 			NameDB:   viper.GetString("db.namedb"),
-			Scheme:   viper.GetString("db.scheme"),
 			User:     viper.GetString("db.user"),
 			Password: viper.GetString("db.pass"),
 			Host:     viper.GetString("db.host"),

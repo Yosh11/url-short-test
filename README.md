@@ -10,7 +10,7 @@
 
 ```json
 {
-    url: "https://google.com"
+    "url": "https://google.com"
 }
 ```
 
@@ -18,8 +18,8 @@
 
 ```json
 {
-    long:  "https://google.com",
-    short: "http://localhost:8080/nYpDEvR"
+    "long":  "https://google.com",
+    "short": "http://localhost:8080/nYE5pJR"
 }
 ```
 
@@ -37,7 +37,7 @@
     "CreatedAt": "2021-01-24T17:35:49.2282227+03:00",
     "UpdatedAt": "2021-01-25T11:44:51.3115739+03:00",
     "DeletedAt": null,
-    "hash": "nYpDEvR",
+    "hash": "nYE5pJR",
     "url": "https://google.com",
     "count": 2,
     "access": true,
@@ -53,24 +53,13 @@
 
 #### *Redirect*
 
-http://localhost:8080/nYpDEvR ---> https://google.com
+http://localhost:8080/nYE5pJR ---> https://google.com
 
  ***
 
-## Build
-
-### MS SQL Server
+## Startup
 
 ```sh
 $ cd ./
-$ docker-compose up
-
-```
-
-### API Server
-
-```sh
-$ cd ./
-$ make
-$ ./main.exe
+$ docker-compose up --build
 ```
