@@ -1,22 +1,19 @@
 version: "3.9"
 
 services:
-  db:
+  mongo:
+    image: mongo
+    container_name: mango
     restart: always
-    build:
-      ./database
-    image: db
-    container_name: PSQL
-    environment:
-      - POSTGRES_DB=url-short
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=p2ompiTJ
     ports:
-      - "5432:5432"
+      - "27017:27017"
     volumes:
-      - ./database/volume-db:/var/lib/postgresql/data
+      - './volume/mongo:/data/db'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "echo 'db.stats().ok' | mongo 127.0.0.1:27017 --quiet"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -24,12 +21,12 @@ services:
       driver: none
   api:
     build: ./
-    container_name: API
-    command: ["./apiserver"]
     depends_on:
-      db:
+      mongo:
         condition: service_healthy
     links:
-      - db
+      - mongo
+    container_name: API
+    command: [ "./api" ]
     ports:
       - "8080:8080"
