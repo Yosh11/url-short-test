@@ -1,6 +1,7 @@
 package err
 
 import (
+	"runtime"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -17,22 +18,31 @@ func InitLogrus() {
 }
 
 // CheckFatal default fatal errors checker
-func CheckFatal(e error, ifErr ...interface{}) {
+func CheckFatal(e error, more ...interface{}) {
+	f, l := detailError()
 	if e != nil {
-		// logrus.WithFields(logrus.Fields{ todo upgrade logger to write line & file where we have error (not logrus realise)
-		// 	"file": "main",
-		// 	"line": 42,
-		// }).Fatalln(e)
-		logrus.Fatalf("%v => %s", ifErr, e)
+		logrus.WithFields(logrus.Fields{
+			"func": f,
+			"line": l,
+		}).Fatalf("%s | %v", e, more)
 	}
 }
 // CheckError default errors checker
-func CheckError(e error, ifErr ...interface{}) {
+func CheckError(e error, more ...interface{}) {
+	f, l := detailError()
 	if e != nil {
-		logrus.Errorf("%v => %s", ifErr, e)
+		logrus.WithFields(logrus.Fields{
+			"func": f,
+			"line": l,
+		}).Errorf("%s | %v", e, more)
 	}
 }
 
 func Info(r ...interface{}) {
 	logrus.Infoln(r...)
+}
+
+func detailError() (string, int) {
+	pc, _, l, _ := runtime.Caller(2)
+	return runtime.FuncForPC(pc).Name(), l
 }
