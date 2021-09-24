@@ -11,7 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/Yosh11/url-short-test/internal/err"
-	"github.com/Yosh11/url-short-test/internal/repo"
 	"github.com/Yosh11/url-short-test/internal/srv"
 )
 
@@ -19,19 +18,12 @@ func main() {
 	e := godotenv.Load()
 	err.CheckFatal(e,"fail with env`s")
 	err.InitLogrus()
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	client, e := repo.NewMongoDd(ctx, repo.Config{
-		User: os.Getenv("USER"),
-		Pass: os.Getenv("PASS"),
-		Host: os.Getenv("HOST"),
-		Port: os.Getenv("PORT_DB"),
-	})
-	err.CheckFatal(e, "db conn fail")
 
+	db := srv.InitMongo()
 	s := new(srv.Server)
 	go err.CheckError(s.Run(os.Getenv("PORT_API"), nil))
 
-	graceful(s, client, 10*time.Second)
+	graceful(s, db, 10*time.Second)
 }
 
 func graceful(s *srv.Server, db *mongo.Client, timeout time.Duration) {

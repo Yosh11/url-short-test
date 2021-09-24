@@ -63,6 +63,10 @@ func Info(r ...interface{}) {
 	logrus.Infoln(r...)
 }
 
+func Fata(e error, more ...interface{}) {
+	logrus.Fatalln(e, more)
+}
+
 func detailError() (string, int) {
 	pc, _, l, _ := runtime.Caller(2)
 	return runtime.FuncForPC(pc).Name(), l
