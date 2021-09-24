@@ -1,11 +1,14 @@
 package err
 
 import (
+	"os"
 	"runtime"
 	"time"
 
 	"github.com/sirupsen/logrus"
 )
+
+var stand string
 
 // InitLogrus custom logrus
 func InitLogrus() {
@@ -15,26 +18,44 @@ func InitLogrus() {
 		FullTimestamp:    true,
 		TimestampFormat:  time.RFC822Z,
 	})
+	stand = os.Getenv("STAND")
+	if stand == "" {
+		logrus.Fatalln("Don`t find stand env")
+	}
 }
 
 // CheckFatal default fatal errors checker
 func CheckFatal(e error, more ...interface{}) {
-	f, l := detailError()
-	if e != nil {
-		logrus.WithFields(logrus.Fields{
-			"func": f,
-			"line": l,
-		}).Fatalf("%s | %v", e, more)
+	if e == nil {
+		return
+	}
+	if stand == "dev" {
+		f, l := detailError()
+		if e != nil {
+			logrus.WithFields(logrus.Fields{
+				"func": f,
+				"line": l,
+			}).Fatalf("%s | %v", e, more)
+		}
+	} else {
+		logrus.Fatalf("%s | %v", e, more)
 	}
 }
 // CheckError default errors checker
 func CheckError(e error, more ...interface{}) {
-	f, l := detailError()
-	if e != nil {
-		logrus.WithFields(logrus.Fields{
-			"func": f,
-			"line": l,
-		}).Errorf("%s | %v", e, more)
+	if e == nil {
+		return
+	}
+	if stand == "dev" {
+		f, l := detailError()
+		if e != nil {
+			logrus.WithFields(logrus.Fields{
+				"func": f,
+				"line": l,
+			}).Errorf("%s | %v", e, more)
+		}
+	} else {
+		logrus.Errorf("%s | %v", e, more)
 	}
 }
 

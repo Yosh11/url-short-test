@@ -16,10 +16,10 @@ import (
 )
 
 func main() {
+	e := godotenv.Load()
+	err.CheckFatal(e,"fail with env`s")
 	err.InitLogrus()
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	e := godotenv.Load()
-	err.CheckFatal(e, "main:20", "fail with env`s")
 	client, e := repo.NewMongoDd(ctx, repo.Config{
 		User: os.Getenv("USER"),
 		Pass: os.Getenv("PASS"),
