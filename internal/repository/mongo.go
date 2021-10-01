@@ -1,4 +1,4 @@
-package srv
+package repository
 
 import (
 	"context"
@@ -11,7 +11,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
-	"github.com/Yosh11/url-short-test/internal/err"
+	"github.com/Yosh11/url-short-test/init/err"
+)
+
+const (
+	database = "url_short_test"
+	collectionUrls = "urls"
 )
 
 // Config struct for conn string

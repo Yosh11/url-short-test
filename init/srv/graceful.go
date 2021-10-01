@@ -9,7 +9,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/Yosh11/url-short-test/internal/err"
+	"github.com/Yosh11/url-short-test/init/err"
 )
 
 func GracefulShutdown(s *Server, db *mongo.Client, timeout time.Duration) {
