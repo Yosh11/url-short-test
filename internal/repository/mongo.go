@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -27,8 +26,7 @@ type Config struct {
 	Port string
 }
 
-func InitMongo() *mongo.Client {
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+func InitMongo(ctx context.Context) *mongo.Client {
 	c := Config{
 		User: os.Getenv("USER"),
 		Pass: os.Getenv("PASS"),

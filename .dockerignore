@@ -17,3 +17,6 @@
 
 # IDE
 .idea
+
+#docker volume
+volume/mongo/

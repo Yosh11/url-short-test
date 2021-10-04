@@ -1,13 +1,14 @@
 package main
 
 import (
+	"context"
 	"os"
 	"time"
 
 	"github.com/joho/godotenv"
 
 	"github.com/Yosh11/url-short-test/init/err"
-	srv2 "github.com/Yosh11/url-short-test/init/srv"
+	"github.com/Yosh11/url-short-test/init/srv"
 	"github.com/Yosh11/url-short-test/internal/repository"
 )
 
@@ -19,12 +20,14 @@ func main() {
 	err.InitLogrus()
 
 	// Init repository (MongoDB)
-	db := repository.InitMongo()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	db := repository.InitMongo(ctx)
 
 	// New server
-	s := new(srv2.Server)
+	s := new(srv.Server)
 	go err.CheckError(s.Run(os.Getenv("PORT_API"), nil))
 
 	// Try shutdown app
-	srv2.GracefulShutdown(s, db, 10*time.Second)
+	srv.GracefulShutdown(s, ctx, db, 10*time.Second)
 }
