@@ -13,9 +13,9 @@ import (
 	"github.com/Yosh11/url-short-test/init/err"
 )
 
-const (
-	database = "url_short_test"
-	collectionUrls = "urls"
+var (
+	database = os.Getenv("DATABASE")
+	collectionUrls = os.Getenv("COLLECTION")
 )
 
 // Config struct for conn string

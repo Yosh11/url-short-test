@@ -6,10 +6,10 @@ import (
 )
 
 type Urls interface {
-	GetUrl(hash string) string
-	GetUrlInfo(hash string) models.Urls
-	SetUrl(url models.SetUrl) models.SetUrlResp
-	DeleteUrl(hash string)
+	GetUrl(hash string) (string, error)
+	GetUrlInfo(hash string) (models.UrlInfo, error)
+	SetUrl(url models.SetUrl) (models.SetUrlResp, error)
+	DeleteUrl(hash string) error
 }
 
 type Service struct {

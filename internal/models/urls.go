@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type Urls struct {
+type UrlInfo struct {
 	CreatedAt *time.Time   `json:"created-at"`
 	UpdatedAt *time.Time   `json:"updated_at"`
 	DeletedAt *time.Time   `json:"deleted_at"`

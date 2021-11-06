@@ -9,22 +9,22 @@ type UrlsService struct {
 	repo repository.Urls
 }
 
-func (u UrlsService) GetUrl(hash string) string {
-	panic("implement me")
-}
-
-func (u UrlsService) GetUrlInfo(hash string) models.Urls {
-	panic("implement me")
-}
-
-func (u UrlsService) SetUrl(url models.SetUrl) models.SetUrlResp {
-	panic("implement me")
-}
-
-func (u UrlsService) DeleteUrl(hash string) {
-	panic("implement me")
-}
-
 func NewUrlsService(repo repository.Urls) *UrlsService {
 	return &UrlsService{repo: repo}
+}
+
+func (u *UrlsService) GetUrl(hash string) (string, error) {
+	return u.repo.GetUrl(hash)
+}
+
+func (u *UrlsService) GetUrlInfo(hash string) (models.UrlInfo, error) {
+	return u.repo.GetUrlInfo(hash)
+}
+
+func (u *UrlsService) SetUrl(url models.SetUrl) (models.SetUrlResp, error) {
+	return u.repo.SetUrl(url)
+}
+
+func (u *UrlsService) DeleteUrl(hash string) error {
+	return u.repo.DeleteUrl(hash)
 }

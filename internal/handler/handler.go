@@ -15,5 +15,16 @@ func NewHandler(services *service.Service) *Handler {
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
-	return nil
+	router := gin.New()
+	router.Use(gin.Logger(), gin.Recovery())
+
+	urls := router.Group("/urls")
+	{
+		urls.POST("/set", h.setNewUrl)
+		urls.GET("/:hash", h.redirectUrl)
+		urls.GET("/info/:hash", h.getInfoToUrl)
+		urls.DELETE("/:hash", h.delUrl)
+	}
+
+	return router
 }

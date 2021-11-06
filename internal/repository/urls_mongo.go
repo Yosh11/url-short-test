@@ -15,19 +15,20 @@ func NewUrlsMongo(client *mongo.Client) *UrlsMongo {
 	return &UrlsMongo{coll: coll}
 }
 
-func (u *UrlsMongo) GetUrl(hash string) string {
+func (u *UrlsMongo) GetUrl(hash string) (string, error) {
+
+	return "", nil
+}
+
+func (u *UrlsMongo) GetUrlInfo(hash string) (models.UrlInfo, error) {
 	panic("implement me")
 }
 
-func (u *UrlsMongo) GetUrlInfo(hash string) models.Urls {
+func (u *UrlsMongo) SetUrl(url models.SetUrl) (models.SetUrlResp, error) {
 	panic("implement me")
 }
 
-func (u *UrlsMongo) SetUrl(url models.SetUrl) models.SetUrlResp {
-	panic("implement me")
-}
-
-func (u *UrlsMongo) DeleteUrl(hash string) {
+func (u *UrlsMongo) DeleteUrl(hash string) error {
 	panic("implement me")
 }
 
