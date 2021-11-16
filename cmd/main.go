@@ -26,7 +26,7 @@ func main() {
 	defer cancel()
 
 	db := repository.InitMongo(ctx)
-	repos := repository.NewRepository(db)
+	repos := repository.NewRepository(ctx, db)
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 

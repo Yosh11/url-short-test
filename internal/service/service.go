@@ -5,19 +5,19 @@ import (
 	"github.com/Yosh11/url-short-test/internal/repository"
 )
 
-type Urls interface {
+type SrvUrls interface {
 	GetUrl(hash string) (string, error)
-	GetUrlInfo(hash string) (models.UrlInfo, error)
+	GetUrlInfo(hash string) (models.Url, error)
 	SetUrl(url models.SetUrl) (models.SetUrlResp, error)
 	DeleteUrl(hash string) error
 }
 
 type Service struct {
-	Urls
+	SrvUrls
 }
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		Urls: NewUrlsService(repos.Urls),
+		SrvUrls: NewUrlsService(repos.RepoUrls),
 	}
 }

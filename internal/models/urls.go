@@ -1,20 +1,25 @@
 package models
 
-import "time"
+import (
+	"time"
 
-type UrlInfo struct {
-	CreatedAt *time.Time   `json:"created-at"`
-	UpdatedAt *time.Time   `json:"updated_at"`
-	DeletedAt *time.Time   `json:"deleted_at"`
-	Hash      string       `json:"hash"`
-	Url       string       `json:"url"`
-	Count     int          `json:"count"`
-	Access    bool         `json:"access"`
-	Code      int          `json:"code"`
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
+type Url struct {
+	ID primitive.ObjectID  `bson:"_id"`
+	CreatedAt *time.Time   `bson:"created_at" json:"created-at,omitempty"`
+	UpdatedAt *time.Time   `bson:"updated_at" json:"updated_at"`
+	DeletedAt *time.Time   `bson:"deleted_at" json:"deleted_at"`
+	Hash      string       `bson:"hash" json:"hash,omitempty"`
+	Url       string       `bson:"url" json:"url,omitempty"`
+	Count     int          `bson:"count" json:"count"`
+	Access    bool         `bson:"access" json:"access"`
+	Code      int          `bson:"code" json:"code"`
 }
 
 type SetUrl struct {
-	Url string `json:"url"`
+	Url string `json:"url,omitempty"`
 }
 
 type SetUrlResp struct {

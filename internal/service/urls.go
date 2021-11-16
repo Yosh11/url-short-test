@@ -6,10 +6,10 @@ import (
 )
 
 type UrlsService struct {
-	repo repository.Urls
+	repo repository.RepoUrls
 }
 
-func NewUrlsService(repo repository.Urls) *UrlsService {
+func NewUrlsService(repo repository.RepoUrls) *UrlsService {
 	return &UrlsService{repo: repo}
 }
 
@@ -17,7 +17,7 @@ func (u *UrlsService) GetUrl(hash string) (string, error) {
 	return u.repo.GetUrl(hash)
 }
 
-func (u *UrlsService) GetUrlInfo(hash string) (models.UrlInfo, error) {
+func (u *UrlsService) GetUrlInfo(hash string) (models.Url, error) {
 	return u.repo.GetUrlInfo(hash)
 }
 

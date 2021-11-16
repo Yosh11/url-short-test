@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -45,7 +44,7 @@ func InitMongo(ctx context.Context) *mongo.Client {
 	if e = client.Ping(ctx, readpref.Primary()); e != nil {
 		err.Fata(e, "Fail DB conn")
 	} else {
-		log.Println("DB connected")
+		err.Info("DB connected")
 	}
 	return client
 }

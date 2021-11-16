@@ -1,24 +1,26 @@
 package repository
 
 import (
+	"context"
+
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/Yosh11/url-short-test/internal/models"
 )
 
-type Urls interface {
+type RepoUrls interface {
 	GetUrl(hash string) (string, error)
-	GetUrlInfo(hash string) (models.UrlInfo, error)
+	GetUrlInfo(hash string) (models.Url, error)
 	SetUrl(url models.SetUrl) (models.SetUrlResp, error)
 	DeleteUrl(hash string) error
 }
 
 type Repository struct {
-	Urls
+	RepoUrls
 }
 
-func NewRepository(client *mongo.Client) *Repository {
+func NewRepository(ctx context.Context, client *mongo.Client) *Repository {
 	return &Repository{
-		Urls: NewUrlsMongo(client),
+		RepoUrls: NewUrlsMongo(ctx, client),
 	}
 }

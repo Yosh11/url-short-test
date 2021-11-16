@@ -15,7 +15,7 @@ func (h *Handler) setNewUrl(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err)
 		return
 	}
-	// TODO check to valid url (spell check and response status on request8888888)
+	// TODO check to valid url (spell check and response status on request)
 	res, err := h.service.SetUrl(input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err)
