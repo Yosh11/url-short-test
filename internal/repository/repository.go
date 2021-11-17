@@ -1,26 +1,26 @@
 package repository
 
 import (
-	"context"
-
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/Yosh11/url-short-test/internal/models"
 )
 
 type RepoUrls interface {
-	GetUrl(hash string) (string, error)
-	GetUrlInfo(hash string) (models.Url, error)
-	SetUrl(url models.SetUrl) (models.SetUrlResp, error)
-	DeleteUrl(hash string) error
+	Create(url models.SetUrl) (models.SetUrlResp, error)
+	Get(hash string) (models.Url, error)
+	Update(id primitive.ObjectID, newData bson.D) (models.Url, error)
+	Delete(hash string) error
 }
 
 type Repository struct {
 	RepoUrls
 }
 
-func NewRepository(ctx context.Context, client *mongo.Client) *Repository {
+func NewRepository(client *mongo.Client) *Repository {
 	return &Repository{
-		RepoUrls: NewUrlsMongo(ctx, client),
+		RepoUrls: NewUrlsMongo(client),
 	}
 }

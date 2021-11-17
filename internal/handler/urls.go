@@ -38,7 +38,7 @@ func (h *Handler) redirectUrl(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusPermanentRedirect, res)
+	c.Redirect(http.StatusPermanentRedirect, res.Url)
 }
 
 

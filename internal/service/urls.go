@@ -13,18 +13,18 @@ func NewUrlsService(repo repository.RepoUrls) *UrlsService {
 	return &UrlsService{repo: repo}
 }
 
-func (u *UrlsService) GetUrl(hash string) (string, error) {
-	return u.repo.GetUrl(hash)
+func (u *UrlsService) GetUrl(hash string) (models.Url, error) {
+	return u.repo.Get(hash)
 }
 
 func (u *UrlsService) GetUrlInfo(hash string) (models.Url, error) {
-	return u.repo.GetUrlInfo(hash)
+	return u.repo.Get(hash)
 }
 
 func (u *UrlsService) SetUrl(url models.SetUrl) (models.SetUrlResp, error) {
-	return u.repo.SetUrl(url)
+	return u.repo.Create(url)
 }
 
 func (u *UrlsService) DeleteUrl(hash string) error {
-	return u.repo.DeleteUrl(hash)
+	return u.repo.Delete(hash)
 }

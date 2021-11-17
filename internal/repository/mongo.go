@@ -12,11 +12,6 @@ import (
 	"github.com/Yosh11/url-short-test/init/err"
 )
 
-var (
-	database = os.Getenv("DATABASE")
-	collectionUrls = os.Getenv("COLLECTION")
-)
-
 // Config struct for conn string
 type Config struct {
 	User string

@@ -68,6 +68,6 @@ func Fata(e error, more ...interface{}) {
 }
 
 func detailError() (string, int) {
-	pc, _, l, _ := runtime.Caller(2)
+	pc, _, l, _ := runtime.Caller(3)
 	return runtime.FuncForPC(pc).Name(), l
 }

@@ -6,7 +6,7 @@ import (
 )
 
 type SrvUrls interface {
-	GetUrl(hash string) (string, error)
+	GetUrl(hash string) (models.Url, error)
 	GetUrlInfo(hash string) (models.Url, error)
 	SetUrl(url models.SetUrl) (models.SetUrlResp, error)
 	DeleteUrl(hash string) error
