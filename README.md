@@ -2,6 +2,8 @@
 
 ## Routes
 
+ ***
+
 ### /POST
 
 - **localhost:8080/urls/set**
@@ -57,8 +59,6 @@ http://localhost:8080/urls/AQwwD2z ---> https://yandex.ru/
 
  ***
 
-***
-
 ### /DELETE
 
 - **localhost:8080/urls/:hash**
@@ -71,7 +71,7 @@ http://localhost:8080/urls/AQwwD2z ---> https://yandex.ru/
 }
 ```
 
-***
+ ***
 
 ## Startup
 
@@ -79,3 +79,4 @@ http://localhost:8080/urls/AQwwD2z ---> https://yandex.ru/
 $ cd ./
 $ docker-compose up --build
 ```
+ ***
