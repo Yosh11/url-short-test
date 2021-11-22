@@ -65,7 +65,12 @@ func (h *Handler) delUrl(c *gin.Context) {
 		return
 	}
 
-	err := h.service.DeleteUrl(hash)
+	obj, err := h.service.GetUrlInfo(hash); if err != nil {
+		newErrorResponse(c, http.StatusNotFound, err)
+		return
+	}
+
+	err = h.service.DeleteUrl(obj.Id)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err)
 		return

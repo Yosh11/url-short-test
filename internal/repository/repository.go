@@ -12,7 +12,7 @@ type RepoUrls interface {
 	Create(url models.SetUrl) (models.SetUrlResp, error)
 	Get(hash string) (models.Url, error)
 	Update(id primitive.ObjectID, newData bson.D) (models.Url, error)
-	Delete(hash string) error
+	Delete(hash primitive.ObjectID) error
 }
 
 type Repository struct {

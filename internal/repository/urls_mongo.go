@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/Yosh11/url-short-test/internal/helpers"
 	"github.com/Yosh11/url-short-test/internal/models"
@@ -77,11 +78,14 @@ func (u *UrlsMongo) Update(id primitive.ObjectID, newData bson.D) (models.Url, e
 	return models.Url{}, nil
 }
 
-func (u *UrlsMongo) Delete(hash string) error {
-	_, err := u.coll.DeleteOne(u.ctx, bson.D{{"hash", hash}}); if err != nil {
+func (u *UrlsMongo) Delete(id primitive.ObjectID) error {
+	var updateDoc bson.M
+
+	filter := bson.D{{"_id", id}}
+	update := helpers.DeleteSafelyModel(time.Now().UTC())
+	opts := options.FindOneAndUpdate().SetUpsert(true)
+	err := u.coll.FindOneAndUpdate(u.ctx, filter, update, opts).Decode(&updateDoc); if err != nil && err != mongo.ErrNoDocuments {
 		return err
 	}
 	return nil
 }
-
-

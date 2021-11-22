@@ -1,6 +1,12 @@
 package service
 
 import (
+	"errors"
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/Yosh11/url-short-test/internal/helpers"
 	"github.com/Yosh11/url-short-test/internal/models"
 	"github.com/Yosh11/url-short-test/internal/repository"
 )
@@ -14,7 +20,23 @@ func NewUrlsService(repo repository.RepoUrls) *UrlsService {
 }
 
 func (u *UrlsService) GetUrl(hash string) (models.Url, error) {
-	return u.repo.Get(hash)
+	obj, err := u.repo.Get(hash); if err != nil {
+		return models.Url{}, err
+	}
+
+	if obj.DeletedAt != nil {
+		return models.Url{}, errors.New("URL has been removed")
+	}
+
+	_, err = u.repo.Update(obj.Id, helpers.IncrementCounterModel()); if err != nil {
+		return models.Url{}, err
+	}
+
+	_, err = u.repo.Update(obj.Id, helpers.UpdateTimeModel(time.Now().UTC())); if err != nil {
+		return models.Url{}, err
+	}
+
+	return obj, nil
 }
 
 func (u *UrlsService) GetUrlInfo(hash string) (models.Url, error) {
@@ -25,6 +47,6 @@ func (u *UrlsService) SetUrl(url models.SetUrl) (models.SetUrlResp, error) {
 	return u.repo.Create(url)
 }
 
-func (u *UrlsService) DeleteUrl(hash string) error {
-	return u.repo.Delete(hash)
+func (u *UrlsService) DeleteUrl(id primitive.ObjectID) error {
+	return u.repo.Delete(id)
 }
