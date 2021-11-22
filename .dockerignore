@@ -1,3 +1,4 @@
+### Go template
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -15,11 +16,7 @@
 # vendor/
 
 # IDE
-.vscode
 .idea
-
-# environment variable
-# .env
 
 #docker volume
 volume/mongo/

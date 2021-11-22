@@ -1,9 +1,9 @@
 FROM golang:latest
 
-COPY . /go/src/app
+COPY . /go/src/testMongo
 
-WORKDIR /go/src/app
+WORKDIR /go/src/testMongo
 
-RUN go build -o apiserver ./cmd/url-short/main.go
+RUN go build -o api ./cmd/main.go
 
 EXPOSE 8080

@@ -1,25 +1,25 @@
-# URL Shortener (*the task*)
+# URL Shortener v2 (*the task*)
 
 ## Routes
 
 ### /POST
 
-- **localhost:8080/set**
+- **localhost:8080/urls/set**
 
 #### *Request in body*
 
 ```json
 {
-    "url": "https://google.com"
+    "url": "https://yandex.ru/"
 }
 ```
 
-#### *Respose*
+#### *Response*
 
 ```json
 {
-    "long":  "https://google.com",
-    "short": "http://localhost:8080/nYE5pJR"
+    "long":  "https://yandex.ru/",
+    "short": "http://localhost:8080/urls/AQwwD2z"
 }
 ```
 
@@ -27,35 +27,51 @@
 
 ### /GET
 
-- **localhost:8080/info/:hash**
+- **localhost:8080/urls/info/:hash**
 
-#### *Respose*
+#### *Response*
 
 ```json
 {
-    "ID": 1,
-    "CreatedAt": "2021-01-24T17:35:49.2282227+03:00",
-    "UpdatedAt": "2021-01-25T11:44:51.3115739+03:00",
-    "DeletedAt": null,
-    "hash": "nYE5pJR",
-    "url": "https://google.com",
-    "count": 2,
+    "Id": "619b7d1b525c86dea2ecb00f",
+    "created-at": "2021-11-22T11:20:59.505Z",
+    "updated_at": "2021-11-22T11:21:07.612Z",
+    "deleted_at": null,
+    "hash": "AQwwD2z",
+    "url": "https://yandex.ru/",
+    "count": 1,
     "access": true,
-    "code": 200
+    "code": 0
 }
 ```
 
  ***
 
- ### /GET
+### /GET
 
-- **localhost:8080/:hash**
+- **localhost:8080/urls/:hash**
 
 #### *Redirect*
 
-http://localhost:8080/nYE5pJR ---> https://google.com
+http://localhost:8080/urls/AQwwD2z ---> https://yandex.ru/
 
  ***
+
+***
+
+### /DELETE
+
+- **localhost:8080/urls/:hash**
+
+#### *Response*
+
+```json
+{
+    "message": "url removed"
+}
+```
+
+***
 
 ## Startup
 
