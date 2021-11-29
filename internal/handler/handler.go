@@ -18,10 +18,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Logger(), gin.Recovery())
 
+	router.GET("/:hash", h.redirectUrl)
+
 	urls := router.Group("/urls")
 	{
 		urls.POST("/set", h.setNewUrl)
-		urls.GET("/:hash", h.redirectUrl)
 		urls.GET("/info/:hash", h.getInfoToUrl)
 		urls.DELETE("/:hash", h.delUrl)
 	}

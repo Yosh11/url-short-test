@@ -1,8 +1,8 @@
 FROM golang:latest
 
-COPY . /go/src/testMongo
+COPY . /go/src/url-short-test
 
-WORKDIR /go/src/testMongo
+WORKDIR /go/src/url-short-test
 
 RUN go build -o api ./cmd/main.go
 

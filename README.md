@@ -21,7 +21,7 @@
 ```json
 {
     "long":  "https://yandex.ru/",
-    "short": "http://localhost:8080/urls/AQwwD2z"
+    "short": "http://localhost:8080/AQwwD2z"
 }
 ```
 
@@ -55,7 +55,7 @@
 
 #### *Redirect*
 
-http://localhost:8080/urls/AQwwD2z ---> https://yandex.ru/
+http://localhost:8080/AQwwD2z ---> https://yandex.ru/
 
  ***
 
