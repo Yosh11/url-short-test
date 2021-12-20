@@ -13,14 +13,13 @@ import (
 
 	"github.com/Yosh11/url-short-test/internal/helpers"
 	"github.com/Yosh11/url-short-test/internal/models"
-	"github.com/Yosh11/url-short-test/tools/genhash"
+	"github.com/Yosh11/url-short-test/pkg/genhash"
 )
 
 type UrlsMongo struct {
-	ctx context.Context
+	ctx  context.Context
 	coll *mongo.Collection
 }
-
 
 func NewUrlsMongo(client *mongo.Client) *UrlsMongo {
 	ctx := context.Background()
@@ -31,11 +30,13 @@ func NewUrlsMongo(client *mongo.Client) *UrlsMongo {
 func (u *UrlsMongo) Get(hash string) (models.Url, error) {
 	var ret models.Url
 
-	result := u.coll.FindOne(u.ctx, bson.D{{"hash", hash}}); if result.Err() != nil {
+	result := u.coll.FindOne(u.ctx, bson.D{{"hash", hash}})
+	if result.Err() != nil {
 		return models.Url{}, result.Err()
 	}
 
-	err := result.Decode(&ret); if err != nil {
+	err := result.Decode(&ret)
+	if err != nil {
 		return models.Url{}, err
 	}
 
@@ -59,20 +60,22 @@ func (u *UrlsMongo) Create(url models.SetUrl) (models.SetUrlResp, error) {
 
 	newUrlDB := helpers.CreateUrlFactory(newUrl)
 
-	_, err := u.coll.InsertOne(u.ctx, newUrlDB); if err != nil {
+	_, err := u.coll.InsertOne(u.ctx, newUrlDB)
+	if err != nil {
 		return models.SetUrlResp{}, err
 	}
 
 	ret := models.SetUrlResp{
 		Long:  url.Url,
-		Short: fmt.Sprintf("http://%s:%s/urls/%s",os.Getenv("HOST_API"), os.Getenv("PORT_API"), hash),
+		Short: fmt.Sprintf("http://%s:%s/urls/%s", os.Getenv("HOST_API"), os.Getenv("PORT_API"), hash),
 	}
 
 	return ret, nil
 }
 
 func (u *UrlsMongo) Update(id primitive.ObjectID, newData bson.D) (models.Url, error) {
-	_, err := u.coll.UpdateByID(u.ctx, id, newData); if err != nil {
+	_, err := u.coll.UpdateByID(u.ctx, id, newData)
+	if err != nil {
 		return models.Url{}, err
 	}
 	return models.Url{}, nil
@@ -84,7 +87,8 @@ func (u *UrlsMongo) Delete(id primitive.ObjectID) error {
 	filter := bson.D{{"_id", id}}
 	update := helpers.DeleteSafelyModel(time.Now().UTC())
 	opts := options.FindOneAndUpdate().SetUpsert(true)
-	err := u.coll.FindOneAndUpdate(u.ctx, filter, update, opts).Decode(&updateDoc); if err != nil && err != mongo.ErrNoDocuments {
+	err := u.coll.FindOneAndUpdate(u.ctx, filter, update, opts).Decode(&updateDoc)
+	if err != nil && err != mongo.ErrNoDocuments {
 		return err
 	}
 	return nil

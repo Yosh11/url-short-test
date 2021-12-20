@@ -9,18 +9,25 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/Yosh11/url-short-test/init/err"
+	"github.com/Yosh11/url-short-test/init/log"
 )
 
 func GracefulShutdown(s *Server, ctx context.Context, db *mongo.Client, timeout time.Duration) {
 	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	signal.Notify(
+		quit,
+		os.Interrupt,
+		syscall.SIGHUP,
+		syscall.SIGTERM,
+		syscall.SIGINT,
+		syscall.SIGQUIT,
+		syscall.SIGABRT)
 	<-quit
 
 	c, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
-	err.CheckError(db.Disconnect(c), "Database forced to shutdown")
-	err.CheckFatal(s.Shutdown(c), "Server forced to shutdown")
-	err.Info("Server exiting")
+	log.CheckError(db.Disconnect(c), "Database forced to shutdown")
+	log.CheckFatal(s.Shutdown(c), "Server forced to shutdown")
+	log.Info("Server exiting")
 }

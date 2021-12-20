@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
-	"github.com/Yosh11/url-short-test/init/err"
+	"github.com/Yosh11/url-short-test/init/log"
 )
 
 // Config struct for conn string
@@ -30,16 +30,16 @@ func InitMongo(ctx context.Context) *mongo.Client {
 	client, e := mongo.NewClient(options.Client().ApplyURI(
 		fmt.Sprintf("mongodb://%s:%s@%s:%s/?authSource=admin&readPreference=primary&appname=MongoDB%%20Compass%%20Community&ssl=false",
 			c.User, c.Pass, c.Host, c.Port),
-		),
+	),
 	)
-	err.CheckFatal(e, "Problem with NewClient for Mongo")
+	log.CheckFatal(e, "Problem with NewClient for Mongo")
 	e = client.Connect(ctx)
-	err.CheckFatal(e, "Problem with connect to Mongo")
+	log.CheckFatal(e, "Problem with connect to Mongo")
 
 	if e = client.Ping(ctx, readpref.Primary()); e != nil {
-		err.Fata(e, "Fail DB conn")
+		log.Fata(e, "Fail DB conn")
 	} else {
-		err.Info("DB connected")
+		log.Info("DB connected")
 	}
 	return client
 }

@@ -1,4 +1,4 @@
-package err
+package log
 
 import (
 	"os"
@@ -25,37 +25,38 @@ func InitLogrus() {
 }
 
 // CheckFatal default fatal errors checker
-func CheckFatal(e error, more ...interface{}) {
-	if e == nil {
+func CheckFatal(err error, more ...interface{}) {
+	if err == nil {
 		return
 	}
 	if stand == "dev" {
 		f, l := detailError()
-		if e != nil {
+		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"func": f,
 				"line": l,
-			}).Fatalf("%s | %v", e, more)
+			}).Fatalf("%s | %v", err, more)
 		}
 	} else {
-		logrus.Fatalf("%s | %v", e, more)
+		logrus.Fatalf("%s | %v", err, more)
 	}
 }
+
 // CheckError default errors checker
-func CheckError(e error, more ...interface{}) {
-	if e == nil {
+func CheckError(err error, more ...interface{}) {
+	if err == nil {
 		return
 	}
 	if stand == "dev" {
 		f, l := detailError()
-		if e != nil {
+		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"func": f,
 				"line": l,
-			}).Errorf("%s | %v", e, more)
+			}).Errorf("%s | %v", err, more)
 		}
 	} else {
-		logrus.Errorf("%s | %v", e, more)
+		logrus.Errorf("%s | %v", err, more)
 	}
 }
 
@@ -63,11 +64,11 @@ func Info(r ...interface{}) {
 	logrus.Infoln(r...)
 }
 
-func Fata(e error, more ...interface{}) {
-	logrus.Fatalln(e, more)
+func Fata(err error, more ...interface{}) {
+	logrus.Fatalln(err, more)
 }
 
 func detailError() (string, int) {
-	pc, _, l, _ := runtime.Caller(3)
+	pc, _, l, _ := runtime.Caller(2)
 	return runtime.FuncForPC(pc).Name(), l
 }
