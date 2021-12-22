@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
+	"github.com/robfig/cron/v3"
 
 	"github.com/Yosh11/url-short-test/init/log"
 	"github.com/Yosh11/url-short-test/init/srv"
@@ -18,10 +19,12 @@ import (
 func main() {
 	// Init env`s
 	err := godotenv.Load()
-	log.CheckFatal(err, "fail with env`s")
-
 	// Init custom logger
 	log.InitLogrus()
+	log.CheckFatal(err, "fail with env`s")
+
+	// Initialize a new Cron job runner
+	c := cron.New()
 
 	// Init repository (MongoDB)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -33,7 +36,9 @@ func main() {
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 
-	go inspect.StartInspect()
+	_, err = c.AddFunc("@hourly", inspect.StartInspect)
+	log.CheckFatal(err)
+	c.Start()
 
 	// New server
 	s := new(srv.Server)
