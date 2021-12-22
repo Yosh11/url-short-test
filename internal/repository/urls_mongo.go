@@ -67,7 +67,7 @@ func (u *UrlsMongo) Create(url models.SetUrl) (models.SetUrlResp, error) {
 
 	ret := models.SetUrlResp{
 		Long:  url.Url,
-		Short: fmt.Sprintf("http://%s:%s/urls/%s", os.Getenv("HOST_API"), os.Getenv("PORT_API"), hash),
+		Short: fmt.Sprintf("http://%s:%s/%s", os.Getenv("HOST_API"), os.Getenv("PORT_API"), hash),
 	}
 
 	return ret, nil

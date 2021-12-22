@@ -33,7 +33,7 @@ func main() {
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 
-	inspect.StartInspect()
+	go inspect.StartInspect()
 
 	// New server
 	s := new(srv.Server)

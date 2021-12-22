@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"sync"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -17,6 +19,10 @@ type InsMongo struct {
 	ctx  context.Context
 	coll *mongo.Collection
 }
+
+var (
+	wg = sync.WaitGroup{}
+)
 
 func (ins *InsMongo) StartInspect() {
 	log.Info("Start inspect all urls")
@@ -34,24 +40,51 @@ func (ins *InsMongo) StartInspect() {
 	if len(res) >= 10 {
 		count := len(res) / goCont
 		for i := 0; i < goCont; i++ {
+			wg.Add(1)
 			go ins.check(res[count*i : count*(i+1)])
 		}
 
 		if len(res)%goCont != 0 {
 			last := len(res) % goCont
+			wg.Add(1)
 			go ins.check(res[len(res)-last:])
 		}
 
 	} else {
+		wg.Add(1)
 		go ins.check(res)
 	}
+
+	wg.Wait()
+	log.Info("Finish inspect all urls")
 }
 
 func (ins *InsMongo) check(urls []models.Url) {
 	for _, v := range urls {
-		_, err := http.Get(v.Url)
-		log.CheckError(err)
+		var update bson.M
+		res, err := http.Get(v.Url)
+		if err != nil {
+			update = bson.M{
+				"deleted_at": time.Now().UTC(),
+				"access":     false,
+			}
+		} else {
+			update = bson.M{
+				"updated_at": time.Now().UTC(),
+				"code":       res.StatusCode,
+				"access": func() bool {
+					if res.StatusCode == 200 {
+						return true
+					}
+					return false
+				}(),
+			}
+		}
+
+		mRes := ins.coll.FindOneAndUpdate(ins.ctx, bson.D{{"_id", v.Id}}, bson.D{{"$set", update}})
+		log.CheckError(mRes.Err())
 	}
+	wg.Done()
 }
 
 func NewInsMongo(client *mongo.Client) *InsMongo {
