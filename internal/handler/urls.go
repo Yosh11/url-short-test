@@ -15,7 +15,14 @@ func (h *Handler) setNewUrl(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err)
 		return
 	}
-	// TODO check to valid url (spell check and response status on request)
+
+	httpRes, err := http.Get(input.Url)
+	if err != nil || httpRes.StatusCode != 200 {
+		newErrorResponse(c, http.StatusBadRequest,
+			errors.New("the URL passed is not valid. the site is not available"))
+		return
+	}
+
 	res, err := h.service.SetUrl(input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err)
@@ -41,7 +48,6 @@ func (h *Handler) redirectUrl(c *gin.Context) {
 	c.Redirect(http.StatusPermanentRedirect, res.Url)
 }
 
-
 func (h *Handler) getInfoToUrl(c *gin.Context) {
 	hash := c.Param("hash")
 	if hash == "" {
@@ -65,7 +71,8 @@ func (h *Handler) delUrl(c *gin.Context) {
 		return
 	}
 
-	obj, err := h.service.GetUrlInfo(hash); if err != nil {
+	obj, err := h.service.GetUrlInfo(hash)
+	if err != nil {
 		newErrorResponse(c, http.StatusNotFound, err)
 		return
 	}
