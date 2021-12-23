@@ -1,0 +1,31 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/{hash}": {
+            "get": {
+                "description": "Redirect to your site using a short link",
+                "tags": [
+                    "/"
+                ],
+                "summary": "Redirect to site",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Uniq hash",
+                        "name": "hash",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "301": {
+                        "description": ""
+                    }
+                }
+            }
+        }
+    }
+}

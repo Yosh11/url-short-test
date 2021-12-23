@@ -1,0 +1,19 @@
+info:
+  contact: {}
+paths:
+  /{hash}:
+    get:
+      description: Redirect to your site using a short link
+      parameters:
+      - description: Uniq hash
+        in: path
+        name: hash
+        required: true
+        type: string
+      responses:
+        "301":
+          description: ""
+      summary: Redirect to site
+      tags:
+      - /
+swagger: "2.0"

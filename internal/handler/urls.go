@@ -32,6 +32,13 @@ func (h *Handler) setNewUrl(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// redirectUrl godoc
+// @Summary      Redirect to site
+// @Description  Redirect to your site using a short link
+// @Param        hash path string true "Uniq hash"
+// @Tags         /
+// @Success      301
+// @Router       /{hash} [get]
 func (h *Handler) redirectUrl(c *gin.Context) {
 	hash := c.Param("hash")
 	if hash == "" {
