@@ -1,0 +1,129 @@
+definitions:
+  handler.errorResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  models.SetUrl:
+    properties:
+      url:
+        type: string
+    type: object
+  models.SetUrlResp:
+    properties:
+      long:
+        type: string
+      short:
+        type: string
+    type: object
+  models.Url:
+    properties:
+      access:
+        type: boolean
+      code:
+        type: integer
+      count:
+        type: integer
+      created-at:
+        type: string
+      deleted_at:
+        type: string
+      hash:
+        type: string
+      id:
+        type: string
+      updated_at:
+        type: string
+      url:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /{hash}:
+    get:
+      description: Redirect to your site using a short link
+      parameters:
+      - description: Uniq hash
+        in: path
+        name: hash
+        required: true
+        type: string
+      responses:
+        "301":
+          description: ""
+      summary: Redirect to site
+      tags:
+      - /
+  /urls/{hash}:
+    delete:
+      description: Takes the hash of your entry in the link and logically deletes
+        the entry
+      parameters:
+      - description: Uniq hash
+        in: path
+        name: hash
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Delete your url from service
+      tags:
+      - /urls
+  /urls/info/{hash}:
+    get:
+      description: Takes a hash of your post in a link and displays information about
+        your URL
+      parameters:
+      - description: Uniq hash
+        in: path
+        name: hash
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Url'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Get information of your url
+      tags:
+      - /urls
+  /urls/set:
+    post:
+      consumes:
+      - application/json
+      description: Accepts a link and returns a shortened version which will redirect
+        to the original source.
+      parameters:
+      - description: Your url
+        in: body
+        name: url
+        required: true
+        schema:
+          $ref: '#/definitions/models.SetUrl'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SetUrlResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Set new url
+      tags:
+      - /urls
+swagger: "2.0"
