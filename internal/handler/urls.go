@@ -9,6 +9,16 @@ import (
 	"github.com/Yosh11/url-short-test/internal/models"
 )
 
+// setNewUrl godoc
+// @Summary      Set new url
+// @Description  Accepts a link and returns a shortened version which will redirect to the original source.
+// @Accept       json
+// @Produce      json
+// @Param        url body models.SetUrl true "Your url"
+// @Tags         /urls
+// @Success      200 {object} models.SetUrlResp
+// @Failure      400 {object} handler.errorResponse
+// @Router       /urls/set [post]
 func (h *Handler) setNewUrl(c *gin.Context) {
 	var input models.SetUrl
 	if err := c.BindJSON(&input); err != nil {
@@ -55,6 +65,14 @@ func (h *Handler) redirectUrl(c *gin.Context) {
 	c.Redirect(http.StatusPermanentRedirect, res.Url)
 }
 
+// getInfoToUrl godoc
+// @Summary      Get information of your url
+// @Description  Takes a hash of your post in a link and displays information about your URL
+// @Param        hash path string true "Uniq hash"
+// @Tags         /urls
+// @Success      200 {object} models.Url
+// @Failure      400 {object} handler.errorResponse
+// @Router       /urls/info/{hash} [get]
 func (h *Handler) getInfoToUrl(c *gin.Context) {
 	hash := c.Param("hash")
 	if hash == "" {
@@ -71,6 +89,14 @@ func (h *Handler) getInfoToUrl(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// setNewUrl godoc
+// @Summary      Delete your url from service
+// @Description  Takes the hash of your entry in the link and logically deletes the entry
+// @Param        hash path string true "Uniq hash"
+// @Tags         /urls
+// @Success      200
+// @Failure      400 {object} handler.errorResponse
+// @Router       /urls/{hash} [delete]
 func (h *Handler) delUrl(c *gin.Context) {
 	hash := c.Param("hash")
 	if hash == "" {

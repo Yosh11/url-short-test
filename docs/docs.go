@@ -23,6 +23,107 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/urls/info/{hash}": {
+            "get": {
+                "description": "Takes a hash of your post in a link and displays information about your URL",
+                "tags": [
+                    "/urls"
+                ],
+                "summary": "Get information of your url",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Uniq hash",
+                        "name": "hash",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Url"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/urls/set": {
+            "post": {
+                "description": "Accepts a link and returns a shortened version which will redirect to the original source.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "/urls"
+                ],
+                "summary": "Set new url",
+                "parameters": [
+                    {
+                        "description": "Your url",
+                        "name": "url",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SetUrl"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SetUrlResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/urls/{hash}": {
+            "delete": {
+                "description": "Takes the hash of your entry in the link and logically deletes the entry",
+                "tags": [
+                    "/urls"
+                ],
+                "summary": "Delete your url from service",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Uniq hash",
+                        "name": "hash",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/{hash}": {
             "get": {
                 "description": "Redirect to your site using a short link",
@@ -43,6 +144,70 @@ var doc = `{
                     "301": {
                         "description": ""
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handler.errorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SetUrl": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SetUrlResp": {
+            "type": "object",
+            "properties": {
+                "long": {
+                    "type": "string"
+                },
+                "short": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Url": {
+            "type": "object",
+            "properties": {
+                "access": {
+                    "type": "boolean"
+                },
+                "code": {
+                    "type": "integer"
+                },
+                "count": {
+                    "type": "integer"
+                },
+                "created-at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "hash": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
                 }
             }
         }
