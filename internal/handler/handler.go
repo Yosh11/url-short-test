@@ -23,7 +23,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	docs.SwaggerInfo.Title = "URL Shortener (the task)"
 	docs.SwaggerInfo.Description = "This is a simple implementation of a shortening link service."
-	docs.SwaggerInfo.Version = "2.1.0"
+	docs.SwaggerInfo.Version = "2.1.1"
 	docs.SwaggerInfo.Host = "localhost:8080"
 	docs.SwaggerInfo.BasePath = "/"
 	docs.SwaggerInfo.Schemes = []string{"http"}

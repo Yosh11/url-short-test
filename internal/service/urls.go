@@ -20,7 +20,8 @@ func NewUrlsService(repo repository.RepoUrls) *UrlsService {
 }
 
 func (u *UrlsService) GetUrl(hash string) (models.Url, error) {
-	obj, err := u.repo.Get(hash); if err != nil {
+	obj, err := u.repo.Get(hash)
+	if err != nil {
 		return models.Url{}, err
 	}
 
@@ -28,11 +29,17 @@ func (u *UrlsService) GetUrl(hash string) (models.Url, error) {
 		return models.Url{}, errors.New("URL has been removed")
 	}
 
-	_, err = u.repo.Update(obj.Id, helpers.IncrementCounterModel()); if err != nil {
+	if obj.Access {
+		return models.Url{}, errors.New("URL в настоящее время недоступен")
+	}
+
+	_, err = u.repo.Update(obj.Id, helpers.IncrementCounterModel())
+	if err != nil {
 		return models.Url{}, err
 	}
 
-	_, err = u.repo.Update(obj.Id, helpers.UpdateTimeModel(time.Now().UTC())); if err != nil {
+	_, err = u.repo.Update(obj.Id, helpers.UpdateTimeModel(time.Now().UTC()))
+	if err != nil {
 		return models.Url{}, err
 	}
 
