@@ -29,8 +29,8 @@ func (u *UrlsService) GetUrl(hash string) (models.Url, error) {
 		return models.Url{}, errors.New("URL has been removed")
 	}
 
-	if obj.Access {
-		return models.Url{}, errors.New("URL в настоящее время недоступен")
+	if !obj.Access {
+		return models.Url{}, errors.New("the URL is currently unavailable")
 	}
 
 	_, err = u.repo.Update(obj.Id, helpers.IncrementCounterModel())

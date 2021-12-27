@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   mongo:
-    image: mongo:latest
+    image: mongo
     container_name: mango
     restart: always
     ports:
@@ -27,6 +27,6 @@ services:
     links:
       - mongo
     container_name: API
-    command: [ "./api" ]
+    command: [ "./cmd/api" ]
     ports:
       - "8080:8080"
